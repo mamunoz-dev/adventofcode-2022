@@ -45,5 +45,37 @@ console.log(duplications);
 ### Part 2
 
 ```js
+const mapInputs = (inputs) => inputs.map((input) => {
+  const ranges = input.split(',');
+  const range1Values = ranges[0].split('-');
+  const range2Values = ranges[1].split('-');
+  return {
+    range1: { min: range1Values[0], max: range1Values[1] }, 
+    range2: { min: range2Values[0], max: range2Values[1] }
+  }
+});
 
+const inRange = (x, min, max) => {
+    return ((x-min)*(x-max) <= 0);
+}
+
+const partialContains = (subRange, range) => {
+  return inRange(subRange.min, range.min, range.max) ||
+    inRange(subRange.max, range.min, range.max);
+}
+
+const getNumberOfDuplicatedRanges = (pairs) => {
+  return pairs.reduce((acc, pair) => {
+    if(partialContains(pair.range1, pair.range2) || partialContains(pair.range2, pair.range1)) {
+      return acc + 1;
+    }
+    
+    return acc;
+  }, 0);
+}
+
+const pairs = mapInputs(inputs);
+const duplications = getNumberOfDuplicatedRanges(pairs);
+
+console.log(duplications);
 ```    
