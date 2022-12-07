@@ -44,3 +44,51 @@ const finalValue = Object.values(hdd).reduce((acc, value) => {
 console.log(finalValue);
 console.log(total);
 ```
+
+### Part 2
+
+```js
+const route = [];
+let currentDir = '/';
+const hdd = { '/': 0 };
+let total = 0;
+const totalDisk = 70000000;
+
+input.forEach((lineString) => {
+  const line = lineString.split(' ');
+  if(line[0] === '$') {
+    if(line[1] === 'cd') {
+      if(line[2] === '..') {
+        route.pop();
+        currentDir = route[route.length-1] || '/';
+      } else {
+        currentDir = line[2];
+        route.push(currentDir);
+      }
+    }
+  } else if (line[0] === 'dir') {
+    const dirName = line[1];
+    hdd[route.join('.') + '.' + dirName] = 0;
+  } else {
+    const size = Number(line[0]);
+    
+    let parent = '';
+    route.forEach((dir, i) => {
+      parent = i === 0 ? dir : parent + '.' + dir;
+      hdd[parent] += size;
+    });
+    total += size;
+  }
+});
+
+console.log(hdd);
+
+const spaceAvailable = totalDisk - total;
+const spaceNeeded = 30000000 - spaceAvailable;
+
+console.log(spaceNeeded);
+
+const bigDirs = Object.values(hdd).filter(value => value > spaceNeeded);
+
+console.log('Delete', Math.min(...bigDirs));
+```
