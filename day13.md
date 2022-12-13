@@ -76,27 +76,23 @@ function findDividerPacketIndex(packets, dividerPacket) {
     return packets.findIndex(item => JSON.stringify(item) === JSON.stringify(dividerPacket)) + 1;
 }
 
-const indexes = getIndexesOfPairsInRightOrder(sample);
-const indexesSum = indexes.reduce((acc, i) => acc + i);
+function part1(sample) {
+    const indexes = getIndexesOfPairsInRightOrder(sample);
+    const indexesSum = indexes.reduce((acc, i) => acc + i);
 
-console.log('sample part 1', indexesSum); // 13
+    return indexesSum;
+}
 
-const dividerPackets = [[[2]], [[6]]];
-const packets = sortInputWithDividerPackets(sample, dividerPackets);
+function part2(sample) {
+    const dividerPackets = [[[2]], [[6]]];
+    const packets = sortInputWithDividerPackets(sample, dividerPackets);
+    const dividerPacketIndex = [findDividerPacketIndex(packets, dividerPackets[0]), findDividerPacketIndex(packets, dividerPackets[1])];
 
-const dividerPacketIndex = [findDividerPacketIndex(packets, dividerPackets[0]), findDividerPacketIndex(packets, dividerPackets[1])];
+    return dividerPacketIndex[0]*dividerPacketIndex[1];
+}
 
-console.log('sample part 2', dividerPacketIndex[0]*dividerPacketIndex[1]); // 140
-
-const indexes2 = getIndexesOfPairsInRightOrder(sample);
-const indexesSum2 = indexes2.reduce((acc, i) => acc + i);
-
-console.log('input part 1', indexesSum2); // 6484
-
-const dividerPackets2 = [[[2]], [[6]]];
-const packets2 = sortInputWithDividerPackets(input, dividerPackets2);
-
-const dividerPacketIndex2 = [findDividerPacketIndex(packets2, dividerPackets2[0]), findDividerPacketIndex(packets2, dividerPackets2[1])];
-
-console.log('input part 2', dividerPacketIndex2[0]*dividerPacketIndex2[1]); // 19305
+console.log('sample part 1', part1(sample)); // 13
+console.log('sample part 2', part2(sample)); // 140
+console.log('input part 1', part1(input)); // 6484
+console.log('input part 2', part2(input)); // 19305
 ```
