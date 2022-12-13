@@ -1,100 +1,129 @@
-Resolved using BFS algorithm:
+Resolved using Breadth First Search (BFS) algorithm:
 
 ```js
-//const input = ["Sabqponm", "abcryxxl", "accszExk", "acctuvwj", "abdefghi"];
+const sample = ["Sabqponm", "abcryxxl", "accszExk", "acctuvwj", "abdefghi"];
 const input = ["abaacccccccccccccaaaaaaaccccccccccccccccccccccccccccccccccaaaaaa", "abaaccccccccccccccaaaaaaaaaaccccccccccccccccccccccccccccccccaaaa", "abaaaaacccccccccaaaaaaaaaaaaccccccccccccccccccccccccccccccccaaaa", "abaaaaaccccccccaaaaaaaaaaaaaacccccccccccccccccdcccccccccccccaaaa", "abaaaccccccccccaaaaaaaaccacacccccccccccccccccdddcccccccccccaaaaa", "abaaacccccccccaaaaaaaaaaccaaccccccccccccciiiiddddcccccccccccaccc", "abcaaaccccccccaaaaaaaaaaaaaaccccccccccciiiiiijddddcccccccccccccc", "abccaaccccccccaccaaaaaaaaaaaacccccccccciiiiiijjddddccccaaccccccc", "abccccccccccccccaaacaaaaaaaaaaccccccciiiiippijjjddddccaaaccccccc", "abccccccccccccccaacccccaaaaaaacccccciiiippppppjjjdddddaaaaaacccc", "abccccccccccccccccccccaaaaaaccccccckiiippppppqqjjjdddeeeaaaacccc", "abccccccccccccccccccccaaaaaaccccckkkiippppuupqqjjjjdeeeeeaaccccc", "abccccccccccccccccccccccccaaccckkkkkkipppuuuuqqqjjjjjeeeeeaccccc", "abccccccccccccccccccccccccccckkkkkkoppppuuuuuvqqqjjjjjkeeeeccccc", "abcccccccccccccccccccccccccckkkkooooppppuuxuvvqqqqqqjkkkeeeecccc", "abccaaccaccccccccccccccccccckkkoooooopuuuuxyvvvqqqqqqkkkkeeecccc", "abccaaaaacccccaaccccccccccckkkoooouuuuuuuxxyyvvvvqqqqqkkkkeecccc", "abcaaaaacccccaaaacccccccccckkkooouuuuxxxuxxyyvvvvvvvqqqkkkeeeccc", "abcaaaaaaaaaaaaacccccccccccjjjooottuxxxxxxxyyyyyvvvvrrrkkkeecccc", "abcccaaaacaaaaaaaaacaaccccccjjoootttxxxxxxxyyyyyyvvvrrkkkfffcccc", "SbccaacccccaaaaaaaaaaaccccccjjjooottxxxxEzzzyyyyvvvrrrkkkfffcccc", "abcccccccccaaaaaaaaaaaccccccjjjooootttxxxyyyyyvvvvrrrkkkfffccccc", "abcaacccccaaaaaaaaaaaccccccccjjjooottttxxyyyyywwvrrrrkkkfffccccc", "abaaacccccaaaaaaaaaaaaaacccccjjjjonnttxxyyyyyywwwrrlllkfffcccccc", "abaaaaaaaaaaacaaaaaaaaaaccccccjjjnnnttxxyywwyyywwrrlllffffcccccc", "abaaaaaaaaaaaaaaaaaaaaaaccccccjjjnntttxxwwwwwywwwrrlllfffccccccc", "abaaccaaaaaaaaaaaaaaacccccccccjjjnntttxwwwsswwwwwrrlllfffccccccc", "abaacccaaaaaaaacccaaacccccccccjjinnttttwwsssswwwsrrlllgffacccccc", "abccccaaaaaaccccccaaaccccccccciiinnntttsssssssssssrlllggaacccccc", "abccccaaaaaaaccccccccccaaccccciiinnntttsssmmssssssrlllggaacccccc", "abccccaacaaaacccccccaacaaaccccciinnnnnnmmmmmmmsssslllgggaaaacccc", "abccccccccaaacccccccaaaaacccccciiinnnnnmmmmmmmmmmllllgggaaaacccc", "abaaaccccccccccccccccaaaaaacccciiiinnnmmmhhhmmmmmlllgggaaaaccccc", "abaaaaacccccccccccaaaaaaaaaccccciiiiiiihhhhhhhhmmlgggggaaacccccc", "abaaaaaccccaaccccaaaaaaacaacccccciiiiihhhhhhhhhhggggggcaaacccccc", "abaaaaccccaaaccccaaaacaaaaacccccccciiihhaaaaahhhhggggccccccccccc", "abaaaaaaacaaacccccaaaaaaaaaccccccccccccccaaaacccccccccccccccccaa", "abaacaaaaaaaaaaaccaaaaaaaaccccccccccccccccaaaccccccccccccccccaaa", "abcccccaaaaaaaaacccaaaaaaaccccccccccccccccaacccccccccccccccccaaa", "abccccccaaaaaaaaaaaaaaaaacccccccccccccccccaaacccccccccccccaaaaaa", "abcccccaaaaaaaaaaaaaaaaaaaaaccccccccccccccccccccccccccccccaaaaaa"];
 
-const alphabet = "abcdefghijklmnopqrstuvwxyz"
-const heightMap = []
-let startPos = [0,0]
-let endPos = [0,0]
+function createHeightsMap(input) {
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    const heightsMap = [];
+    let startPos = [0,0];
+    let endPos = [0,0];
 
-function preparation(){
-    for(let y = 0; y < input.length; y++){
-        heightMap.push([])
-        for(let x = 0; x < input[y].length; x++){
-            switch(input[y][x]){
-                case 'S':{
-                    startPos = [y, x]
-                    heightMap[y].push(0)
-                    break
+    for (let i=0; i<input.length; i++) {
+        heightsMap.push([]);
+
+        for (let j=0; j < input[i].length; j++) {
+            switch (input[i][j]) {
+                case 'S': {
+                    startPos = [i, j];
+                    heightsMap[i].push(0);
+                    break;
                 }
-                case 'E':{
-                    endPos = [y, x]
-                    heightMap[y].push(25)
-                    break
+                case 'E': {
+                    endPos = [i, j];
+                    heightsMap[i].push(25);
+                    break;
                 }
-                default:{
-                    heightMap[y].push(alphabet.indexOf(input[y][x]))
+                default: {
+                    heightsMap[i].push(alphabet.indexOf(input[i][j]))
                 }
             }
         }
     }
+
+    return { heightsMap, startPos, endPos };
 }
 
-function getValidAdjacent(currPos, reversed = false){
-    const [y, x] = currPos
-    const currHeight = heightMap[y][x]
-    const adjacent = []
+function getValidAdjacents(heightsMap, currPos, reversed = false){
+    const [row, col] = currPos;
+    const currHeight = heightsMap[row][col];
+    const adjacent = [];
 
-    if(reversed){
-        if(heightMap[y].length>x+1 && currHeight <= heightMap[y][x+1] + 1 ){//right
-            adjacent.push([y, x+1])
+    if (reversed) {
+        const right = heightsMap[row].length>col+1 && currHeight <= heightsMap[row][col+1] + 1;
+        const left = col-1 >= 0 && currHeight <= heightsMap[row][col-1] + 1;
+        const down = heightsMap.length>row+1 && currHeight <= heightsMap[row+1][col] + 1;
+        const up = row-1 >= 0 && currHeight <= heightsMap[row-1][col] + 1;
+
+        if (right) {
+            adjacent.push([row, col+1]);
         }
-        if(x-1 >= 0 && currHeight <= heightMap[y][x-1] + 1){//left
-            adjacent.push([y, x-1])
+        if (left) {
+            adjacent.push([row, col-1]);
         }
-        if(heightMap.length>y+1 && currHeight <= heightMap[y+1][x] + 1){//down
-            adjacent.push([y+1, x])
+        if (down) {
+            adjacent.push([row+1, col]);
         }
-        if(y-1 >= 0 && currHeight <= heightMap[y-1][x] + 1){//up
-            adjacent.push([y-1, x])
-        }
-    }
-    else{
-        if(heightMap[y].length>x+1 && heightMap[y][x+1] <= currHeight + 1){//right
-            adjacent.push([y, x+1])
-        }
-        if(x-1 >= 0 && heightMap[y][x-1] <= currHeight + 1){//left
-            adjacent.push([y, x-1])
-        }
-        if(heightMap.length>y+1 && heightMap[y+1][x] <= currHeight + 1){//down
-            adjacent.push([y+1, x])
-        }
-        if(y-1 >= 0 && heightMap[y-1][x] <= currHeight + 1){//up
-            adjacent.push([y-1, x])
+        if (up) {
+            adjacent.push([row-1, col]);
         }
     }
-    
-    return adjacent
+    else {
+        const right = heightsMap[row].length>col+1 && heightsMap[row][col+1] <= currHeight + 1;
+        const left = col-1 >= 0 && heightsMap[row][col-1] <= currHeight + 1;
+        const down = heightsMap.length>row+1 && heightsMap[row+1][col] <= currHeight + 1;
+        const up = row-1 >= 0 && heightsMap[row-1][col] <= currHeight + 1;
+
+        if (right) {
+            adjacent.push([row, col+1]);
+        }
+        if (left) {
+            adjacent.push([row, col-1]);
+        }
+        if (down) {
+            adjacent.push([row+1, col]);
+        }
+        if (up) {
+            adjacent.push([row-1, col]);
+        }
+    }
+
+    return adjacent;
 }
 
-function breadthFirstSearch(startPos, endFunction, reversed = false){
-    const queue = []
-    const visited = new Set()
-    const steps = new Map()
+function breadthFirstSearch(heightsMap, startPos, endFunction, reversed = false){
+    const queue = [];
+    const visited = new Set();
+    const steps = new Map();
 
-    queue.push(startPos)
-    steps.set(`${startPos[0]},${startPos[1]}`, 0)
-    visited.add(`${startPos[0]},${startPos[1]}`)
+    // Initialize all with start position
+    queue.push(startPos);
+    steps.set(startPos.toString(), 0);
+    visited.add(startPos.toString());
 
-    while(queue.length > 0){
-        const currPos = queue.shift()
-        if(endFunction(currPos)){
-            return steps.get(`${currPos[0]},${currPos[1]}`)
+    while(queue.length > 0) {
+        const currPos = queue.shift();
+        const currPosKey = currPos.toString();
+
+        if (endFunction(currPos)) {
+            return steps.get(currPosKey);
         }
-        const neighbours = getValidAdjacent(currPos, reversed)
-        for(const adjacent of neighbours){
-            if(!visited.has(`${adjacent[0]},${adjacent[1]}`) || steps.get(`${currPos[0]},${currPos[1]}`)+1 < steps.get(`${adjacent[0]},${adjacent[1]}`)){
-                steps.set(`${adjacent[0]},${adjacent[1]}`, steps.get(`${currPos[0]},${currPos[1]}`)+1)
-                queue.push(adjacent)
-                visited.add(`${adjacent[0]},${adjacent[1]}`)
-            }  
+
+        const neighbours = getValidAdjacents(heightsMap, currPos, reversed);
+        for (const adjacent of neighbours) {
+            const adjacentPosKey = adjacent.toString();
+            const adjacentVisited = visited.has(adjacentPosKey);
+            const numberOfStepsIsShorter = steps.get(currPosKey)+1 < steps.get(adjacentPosKey);
+
+            if (!adjacentVisited || numberOfStepsIsShorter) {
+                steps.set(adjacentPosKey, steps.get(currPosKey)+1);
+                queue.push(adjacent);
+                visited.add(adjacentPosKey);
+            }
         }
+
+        //console.log('Queue:', queue);
+        //console.log('Visited:', JSON.stringify(Array.from(visited)));
+        //console.log('Steps:', steps);
     }
 }
 
-preparation()
-console.log("part 1:", breadthFirstSearch(startPos, (currPos) => {return (currPos[0] === endPos[0] && currPos[1] === endPos[1])}))
-console.log("part 2:", breadthFirstSearch(endPos, (currPos) => {return heightMap[currPos[0]][currPos[1]] === 0}, true))
+const { heightsMap, startPos, endPos } = createHeightsMap(sample);
+console.log("sample part 1:", breadthFirstSearch(heightsMap, startPos, (currPos) => currPos[0] === endPos[0] && currPos[1] === endPos[1])); // 31
+console.log("sample part 2:", breadthFirstSearch(heightsMap, endPos, (currPos) => heightsMap[currPos[0]][currPos[1]] === 0, true)); // 29
+
+const { heightsMap: heightsMap2, startPos: startPos2, endPos: endPos2 } = createHeightsMap(input);
+console.log("input part 1:", breadthFirstSearch(heightsMap2, startPos2, (currPos) => currPos[0] === endPos2[0] && currPos[1] === endPos2[1])); // 370
+console.log("input part 2:", breadthFirstSearch(heightsMap2, endPos2, (currPos) => heightsMap2[currPos[0]][currPos[1]] === 0, true)); // 363
 ```
