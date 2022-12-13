@@ -119,11 +119,19 @@ function breadthFirstSearch(heightsMap, startPos, endFunction, reversed = false)
     }
 }
 
-const { heightsMap, startPos, endPos } = createHeightsMap(sample);
-console.log("sample part 1:", breadthFirstSearch(heightsMap, startPos, (currPos) => currPos[0] === endPos[0] && currPos[1] === endPos[1])); // 31
-console.log("sample part 2:", breadthFirstSearch(heightsMap, endPos, (currPos) => heightsMap[currPos[0]][currPos[1]] === 0, true)); // 29
+function part1(input) {
+    const { heightsMap, startPos, endPos } = createHeightsMap(input);
+    return breadthFirstSearch(heightsMap, startPos, (currPos) => currPos[0] === endPos[0] && currPos[1] === endPos[1]);
+}
 
-const { heightsMap: heightsMap2, startPos: startPos2, endPos: endPos2 } = createHeightsMap(input);
-console.log("input part 1:", breadthFirstSearch(heightsMap2, startPos2, (currPos) => currPos[0] === endPos2[0] && currPos[1] === endPos2[1])); // 370
-console.log("input part 2:", breadthFirstSearch(heightsMap2, endPos2, (currPos) => heightsMap2[currPos[0]][currPos[1]] === 0, true)); // 363
+function part2(input) {
+    const { heightsMap, endPos } = createHeightsMap(input);
+    return breadthFirstSearch(heightsMap, endPos, (currPos) => heightsMap[currPos[0]][currPos[1]] === 0, true);
+}
+
+console.log("sample part 1:", part1(sample)); // 31
+console.log("sample part 2:", part2(sample)); // 29
+
+console.log("input part 1:", part1(input)); // 370
+console.log("input part 2:", part2(input)); // 363
 ```
