@@ -168,8 +168,69 @@ function part1(input) {
     return sandCount;
 }
 
+function part2(input) {
+    const rockPaths = getRockPaths(input);
+    let caveSize = getCaveSize(rockPaths);
+    caveSize = [caveSize[0]+200, caveSize[1] + 2]; // Adding 200 to extend width of the cave significantly to keep all sand points (find a better way)
+    const minRockPos = getMinRockPos(rockPaths, caveSize);
+    let caveMap = createCaveMap(caveSize, rockPaths);
+    caveMap[caveMap.length - 1] = caveMap[caveMap.length - 1].map(element => Element.ROCK);
+
+    //console.log('initial map');
+    //printMap(caveSize, minRockPos, caveMap);
+
+    let sandCount = 0;
+
+    let currentSandPos;
+
+    let nextSandPos;
+    let diagonalLeftPos;
+    let diagonalRightPos;
+
+    let downElement;
+    let diagonalLeftElement;
+    let diagonalRightElement;
+
+    for (let i = 0; i < 50000; i++) { // Adding 50000 to have enough iterations to fill the cave (find a while condition to replace this)
+        sandCount = i;
+        currentSandPos = [0, 500];
+
+        [ nextSandPos, diagonalLeftPos, diagonalRightPos ] = calculateNextPositions(currentSandPos);
+        [ downElement, diagonalLeftElement, diagonalRightElement ] = calculateNextElements(nextSandPos, diagonalLeftPos, diagonalRightPos, caveMap);
+
+        if (downElement === Element.SAND && diagonalLeftElement === Element.SAND && diagonalRightElement === Element.SAND) {
+            caveMap[currentSandPos[0]][currentSandPos[1]] = Element.SAND;
+            sandCount++;
+            break;
+        }
+
+        while (downElement === Element.AIR || diagonalLeftElement === Element.AIR || diagonalRightElement === Element.AIR) {
+            if (downElement === Element.AIR) {
+                caveMap = getMapAfterSandStep(caveMap, currentSandPos, nextSandPos);
+                currentSandPos = [nextSandPos[0], nextSandPos[1]];
+            } else if (diagonalLeftElement === Element.AIR) {
+                caveMap = getMapAfterSandStep(caveMap, currentSandPos, diagonalLeftPos);
+                currentSandPos = [diagonalLeftPos[0], diagonalLeftPos[1]];
+            } else if (diagonalRightElement === Element.AIR || !diagonalRightElement) {
+                caveMap = getMapAfterSandStep(caveMap, currentSandPos, diagonalRightPos);
+                currentSandPos = [diagonalRightPos[0], diagonalRightPos[1]];
+            }
+
+            [ nextSandPos, diagonalLeftPos, diagonalRightPos ] = calculateNextPositions(currentSandPos);
+            [ downElement, diagonalLeftElement, diagonalRightElement ] = calculateNextElements(nextSandPos, diagonalLeftPos, diagonalRightPos, caveMap);
+        }
+    }
+
+
+    //console.log('final map');
+    //printMap(caveSize, minRockPos, caveMap);
+
+    return sandCount;
+}
+
 console.log('sample part 1', part1(sample));
 console.log('input part 1', part1(input));
 
-
+console.log('sample part 2', part2(sample));
+console.log('input part 2', part2(input));
 ```
