@@ -27,54 +27,61 @@ function getSignalStrength(cycles) {
         .reduce((acc, cycleNumber) => acc + cycleNumber * getValueOfXAfterCycle(cycleNumber, cycles), 0);
 }
 
-function part1(input) {
-    const cycles = getCyclesDistribution(input);
-    return getSignalStrength(cycles);
-}
-
-console.log('sample part 1', part1(sample)); // 13140
-console.log('input part 1', part1(input)); // 16020
-
 function getSpritePosition(x) {
     return [x-1, x, x+1];
 }
 
-function printCrtRow(cycle, i, cycles, pixelX, pixelY) {
-    const x = getValueOfXAfterCycle(i+1, cycles);
-    const spritePosition = getSpritePosition(x);
+function getCrtChar(currentCycle, cycles, col) {
+    const x = getValueOfXAfterCycle(currentCycle+1, cycles);
+    return getSpritePosition(x).includes(col) ? '#' : '.';
+}
 
-    if(spritePosition.includes(pixelY)) {
-        crt[pixelX][pixelY] = '#';
+function getCrtRow(row, cycles) {
+    const crtTotalCols = 40;
+    const blockOf40Cycles = cycles.slice(crtTotalCols*row, crtTotalCols*row + crtTotalCols);
+    const emptyCrtRow = '.'.repeat(crtTotalCols).split('');
 
-        let str = crt[pixelX].split('');
-        str[pixelY] = '#';
-        str = str.join('');
+    const crtRow = blockOf40Cycles.reduce(
+        (crt, cycle, col) => {
+            const currentCycle = crtTotalCols*row + col;
+            crt[col] = getCrtChar(currentCycle, cycles, col);
+            return crt;
+        },
+        emptyCrtRow
+    );
 
-        crt[pixelX] = str;
-    }
+    return crtRow.join('');
+}
+
+function getCrt(input) {
+    const crtTotalCols = 6;
+    const cycles = getCyclesDistribution(input);
+
+    const crt = Array.from(new Array(crtTotalCols))
+        .map((row, rowIndex) => getCrtRow(rowIndex, cycles));
+
+    return crt;
 }
 
 function printCrt(input) {
-    const cycles = getCyclesDistribution(input);
-    let pixelX = 0;
-    let pixelY = 0;
-
-    for(let i=0; i<crt.length; i++) {
-        pixelX = i;
-        pixelY = 0;
-        cycles.slice(40*i, 40*i+40).forEach((cycle, j) => printCrtRow(cycle, j+40*i, cycles, pixelX, pixelY+j));
-    }
-
+    const crt = getCrt(input);
     for(let i=0; i<crt.length; i++) {
         console.log(crt[i]);
     }
+}
+
+function part1(input) {
+    const cycles = getCyclesDistribution(input);
+    return getSignalStrength(cycles);
 }
 
 function part2(input) {
     printCrt(input);
 }
 
-let crt = new Array(6).fill('.'.repeat(40));
+console.log('sample part 1', part1(sample)); // 13140
+console.log('input part 1', part1(input)); // 16020
+
 console.log('sample part 2', part2(sample));
 /*
 ##..##..##..##..##..##..##..##..##..##..
@@ -85,7 +92,6 @@ console.log('sample part 2', part2(sample));
 #######.......#######.......#######.....
  */
 
-crt = new Array(6).fill('.'.repeat(40));
 console.log('input part 2', part2(input)); // ECZUZALR
 /*
 ####..##..####.#..#.####..##..#....###..
@@ -95,4 +101,5 @@ console.log('input part 2', part2(input)); // ECZUZALR
 #....#..#.#....#..#.#....#..#.#....#.#..
 ####..##..####..##..####.#..#.####.#..#.
  */
+
 ```
