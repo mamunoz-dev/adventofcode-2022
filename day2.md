@@ -1,136 +1,66 @@
-### Part 1
+# Day 2: Rock Paper Scissors
+
+Codepen: https://codepen.io/mamunoz-dev/pen/wvxqxgZ?editors=0011
 
 ```js
-const MoveType = {
-	ROCK: 'Rock',
-  PAPER: 'Paper',
-  SCISSORS: 'Scissors'
-}
-
-const moves = {
-	A: { name: MoveType.ROCK, value: 1 },
-  B: { name: MoveType.PAPER, value: 2 },
-  C: { name: MoveType.SCISSORS, value: 3 },
-  X: { name: MoveType.ROCK, value: 1 },
-  Y: { name: MoveType.PAPER, value: 2 },
-  Z: { name: MoveType.SCISSORS, value: 3 }
-};
-
-const outcomes = {
-	WIN: 6,
+const ROUND_RESULT_POINTS = {
+  WIN: 6,
   DRAW: 3,
   LOSE: 0
 };
 
-function handResult(elfsHand, myHand) {
-	const elfsHandValue = moves[elfsHand].value;
-  const myHandsValue = moves[myHand].value;
-  const elfsHandName = moves[elfsHand].name;
-  const myHandsName = moves[myHand].name;
-  let outcome = outcomes.DRAW;
-  
-  
-  if (myHandsName === MoveType.ROCK && elfsHandName === MoveType.SCISSORS || myHandsName === MoveType.SCISSORS && elfsHandName === MoveType.PAPER || myHandsName === MoveType.PAPER && elfsHandName === MoveType.ROCK) {
-  	outcome = outcomes.WIN;
-  } else if (myHandsName === MoveType.SCISSORS && elfsHandName === MoveType.ROCK || myHandsName === MoveType.PAPER && elfsHandName === MoveType.SCISSORS || myHandsName === MoveType.ROCK && elfsHandName === MoveType.PAPER) {
-  	outcome = outcomes.LOSE;
-  }
-  
-  // console.log(moves[myHand].name, moves[elfsHand].name, myHandsValue, outcome, 'Points:', outcome + myHandsValue);
-  
-  return outcome + myHandsValue;
+const MOVE_POINTS = {
+  ROCK: 1,
+  PAPER: 2,
+  SCISSORS: 3
 }
 
-function game(hands) {
-	return hands.reduce((acc, currentHand) => {
-  	const currentHandArray = currentHand.split(' ');
-    const elfsHand = currentHandArray[0];
-    const myHand = currentHandArray[1];
-    
-    return acc + handResult(elfsHand, myHand);
+const MY_HAND_POINTS = {
+  X: MOVE_POINTS.ROCK,
+  Y: MOVE_POINTS.PAPER,
+  Z: MOVE_POINTS.SCISSORS,
+};
+
+const DESIRED_RESULT_POINTS = {
+  X: ROUND_RESULT_POINTS.LOSE,
+  Y: ROUND_RESULT_POINTS.DRAW,
+  Z: ROUND_RESULT_POINTS.WIN
+};
+
+const PART1_POINTS = {
+  X: { A: ROUND_RESULT_POINTS.DRAW, B: ROUND_RESULT_POINTS.LOSE, C: ROUND_RESULT_POINTS.WIN },
+  Y: { A: ROUND_RESULT_POINTS.WIN, B: ROUND_RESULT_POINTS.DRAW, C: ROUND_RESULT_POINTS.LOSE },
+  Z: { A: ROUND_RESULT_POINTS.LOSE, B: ROUND_RESULT_POINTS.WIN, C: ROUND_RESULT_POINTS.DRAW },
+};
+
+const PART2_POINTS = {
+  X: { A: MOVE_POINTS.SCISSORS, B: MOVE_POINTS.ROCK, C: MOVE_POINTS.PAPER },
+  Y: { A: MOVE_POINTS.ROCK, B: MOVE_POINTS.PAPER, C: MOVE_POINTS.SCISSORS },
+  Z: { A: MOVE_POINTS.PAPER, B: MOVE_POINTS.SCISSORS, C: MOVE_POINTS.ROCK },
+};
+
+function roundResultPart1(elfsHand, myHand) {
+  return MY_HAND_POINTS[myHand] + PART1_POINTS[myHand][elfsHand];
+}
+
+function roundResultPart2(elfsHand, desiredResult) {
+    return DESIRED_RESULT_POINTS[desiredResult] + PART2_POINTS[desiredResult][elfsHand];
+}
+
+function paperRockScissorsGame(rounds, part1=true) {
+  return rounds.reduce((acc, round) => {
+    const roundArray = round.split(' ');
+    return part1 ?
+      acc + roundResultPart1(roundArray[0], roundArray[1]) :
+      acc + roundResultPart2(roundArray[0], roundArray[1]);
   }, 0);
 }
 
-const hands = ["A Y", "B X", "C Z"];
+const sample = ["A Y", "B X", "C Z"];
+const input = ["A Z", "C Z", "C Z", "A Z", "C Y", "C Z", "A Z", "B Z", "A Z", "A Z", "C Z", "A X", "C Y", "C Z", "C Y", "C Z", "A Z", "C Z", "A Z", "A Z", "C Z", "C Z", "C Z", "A Y", "C Z", "C Z", "C Y", "A Z", "C X", "A Z", "A Z", "C Z", "B Y", "C Z", "C Y", "C X", "C Z", "C Z", "B Y", "A Z", "C Z", "C Y", "B Y", "C Z", "A Y", "B Y", "C Z", "C Z", "A Z", "A Z", "A X", "A Z", "B Z", "A Z", "A X", "A Y", "C Z", "C Z", "A Z", "C Y", "A Z", "C Z", "B Y", "C Z", "C Y", "B Z", "A Z", "C Z", "A Z", "B Z", "A X", "C Z", "A Z", "C Y", "C Y", "C Z", "A Z", "C Z", "C Y", "C Z", "C Z", "C Z", "C Z", "C Y", "A Z", "C Z", "C Y", "A Z", "A Z", "A Z", "C Z", "A X", "A Z", "A Z", "A Z", "C Z", "C Y", "C Y", "A Z", "A Z", "C Y", "A Z", "C Z", "A Z", "C Y", "B Y", "C Z", "A Z", "A Z", "C Z", "A Z", "C Y", "A Z", "A Z", "C Y", "A Z", "C Z", "A Z", "A Z", "A Z", "C Y", "A Z", "B Z", "C Y", "C Z", "B Y", "A Z", "A Z", "C Z", "C Z", "B X", "B Y", "A Z", "A Z", "A Z", "C Z", "C Y", "B Z", "C Z", "C Z", "C Z", "A Y", "A Z", "A Z", "C Y", "C Z", "A Z", "C Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Y", "C Y", "C Y", "C Z", "A Z", "C Z", "A Z", "A Z", "C Z", "A Z", "C Z", "A Z", "A Z", "B Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Y", "B X", "A X", "A Y", "A X", "C Z", "A X", "B X", "A X", "B Z", "A Z", "C Z", "C Z", "C Z", "C Z", "B Z", "C Z", "A Z", "A Z", "A Z", "A Z", "C Z", "A Z", "A Z", "C Z", "A Z", "C Y", "C Z", "C Z", "B Y", "C Z", "A X", "A Z", "A Z", "C Y", "C Z", "C Z", "A Z", "C Z", "A Z", "C Z", "A Z", "C Y", "A Z", "B Y", "C Z", "C Z", "A Z", "C Z", "C Y", "C Z", "A Z", "A Z", "C Z", "C Z", "A Z", "A Z", "C Z", "C Y", "C Z", "C Z", "C Z", "C Y", "C Z", "A Z", "C Z", "A Z", "A Z", "A Z", "B Z", "A Z", "C Y", "A Y", "A Z", "C Z", "A Z", "A Z", "C Z", "A Z", "C Z", "C Z", "C Z", "A Z", "B Z", "C Y", "C Z", "C Z", "B X", "C Z", "C Y", "A Z", "A Y", "C Z", "C Y", "B Y", "A Z", "C Z", "A Z", "B Y", "C Z", "C Z", "C Z", "B Z", "B Z", "C Z", "C Z", "C Z", "C Z", "A Z", "A X", "B Y", "C Z", "C Z", "A Z", "C Y", "A Z", "C Z", "A Z", "C Y", "C Z", "A Z", "C Y", "C Y", "C Z", "A Z", "C Z", "C Z", "C Z", "A X", "A Z", "C Z", "C Z", "C Z", "A Z", "C Z", "C Z", "C Y", "C Y", "C Y", "C Z", "C Y", "C Z", "A Z", "A Z", "C Z", "C Z", "C Y", "A Y", "C Z", "C Z", "B Z", "A Z", "A Z", "A Y", "A Z", "B Y", "A Z", "C Y", "A Z", "C Y", "A Z", "A Z", "A X", "B Z", "C Y", "A Z", "C Z", "A Y", "C Z", "C Y", "B Y", "A Z", "B Z", "B Z", "C Z", "A X", "B Y", "C Z", "A Y", "C Z", "A Z", "C Z", "B Z", "C Y", "C Z", "A Z", "C Z", "C Y", "A Z", "A X", "A Z", "A Y", "C Z", "A Z", "C Y", "A Z", "C Z", "C Y", "C Z", "B X", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Y", "C Y", "C Z", "B Z", "B Z", "C Z", "B Z", "A Z", "C Z", "C Y", "C Z", "C Z", "A Z", "C Z", "B Y", "C Z", "A Z", "C Z", "A Z", "C Z", "A Z", "C Y", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Y", "C Y", "A Z", "A Z", "C Z", "A Z", "A Z", "B Y", "A Z", "A Z", "C Z", "C Y", "A Z", "C Z", "A Z", "A Z", "C Z", "C Z", "C Z", "A Z", "C Y", "C Z", "C Z", "C Y", "C Y", "C Y", "A Z", "C Z", "A Z", "C Z", "B Y", "A X", "C Z", "C Z", "C Z", "C Z", "B Z", "A Z", "C Z", "A Z", "B Z", "B X", "C Z", "B X", "C Z", "C Z", "A Z", "B X", "C Z", "A Z", "A Z", "B Y", "C Z", "C Z", "B X", "C Y", "A Z", "A Z", "B Z", "A Z", "C Z", "A Z", "B Y", "A Z", "C Z", "B Y", "C Y", "C Z", "C X", "C Z", "C Z", "A X", "C Z", "A Y", "C Z", "A X", "A Z", "C Z", "C Z", "C Z", "B Y", "C Y", "A Z", "C Z", "A Z", "C Z", "C Z", "C Z", "C Y", "C Z", "C Z", "B Y", "A Z", "C Z", "C Z", "C Z", "A Z", "C Z", "A Z", "B Z", "C Z", "A Z", "C Z", "A Z", "C Y", "C Z", "C Z", "C Z", "C Z", "A Z", "A Z", "B Z", "A Z", "B Z", "C Z", "C Z", "C Y", "C Z", "A Z", "A Z", "C Z", "A Z", "B Y", "A Z", "C Z", "C Z", "A Z", "A Z", "A Y", "A Z", "C Z", "A Z", "C Y", "C Z", "C Z", "C Z", "A Z", "C Z", "C Z", "B X", "A Z", "A Z", "C Y", "B Z", "C Z", "A Z", "A Z", "A Y", "C Z", "C Z", "C Z", "A Z", "C Z", "C Z", "C Z", "B Y", "A Z", "B Z", "C Y", "B Y", "A Z", "A Z", "A Z", "C Z", "C Y", "A Z", "A Z", "C Z", "C Z", "A Z", "B Z", "C Z", "A Z", "A Z", "C Z", "A Z", "A Z", "A X", "B Z", "C Z", "C Z", "C Z", "C Z", "C Y", "A Z", "C Z", "C Y", "C Z", "B Y", "A Z", "A Z", "C Z", "C Z", "A Z", "C Y", "C Z", "A Z", "A Z", "C Z", "C Z", "C Y", "B Y", "C Z", "A Z", "A Z", "C Z", "C Z", "C Y", "C Z", "A Z", "C Z", "A Z", "C Z", "A Z", "C Y", "C Z", "C Z", "C Y", "A Z", "B Y", "C Z", "A Z", "C Z", "C Z", "B Z", "B Z", "A Z", "C Z", "C Y", "C Z", "C Z", "A Z", "B Y", "B Z", "C Z", "A Z", "C Z", "C Y", "C Z", "C Z", "C Y", "C Z", "A Y", "A Z", "A Z", "A Z", "B Y", "C Z", "C Z", "C Z", "C Y", "C Z", "A Z", "C Y", "B Y", "C Z", "A Z", "A Z", "C Z", "C Z", "A Z", "A X", "B Z", "A Z", "C Z", "A Z", "C Z", "C Y", "A Z", "A Z", "C Z", "C Z", "B Z", "B Y", "A X", "A Z", "A Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Y", "A Z", "A Z", "C Y", "C X", "A Z", "A Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "A X", "C Z", "A Z", "B Y", "B Y", "A Z", "A Z", "C Z", "C Y", "C Z", "A Z", "A Z", "A X", "A Z", "C Z", "A Z", "A Y", "A Z", "C Z", "B Y", "B Y", "C Z", "B Y", "A Z", "B Y", "C Z", "B Z", "B Y", "C Y", "C Z", "C Y", "C Z", "A Z", "C Y", "C Z", "C Z", "C Z", "A Z", "C Z", "C Y", "C Z", "B Z", "C Z", "A Z", "B Y", "B Z", "C Z", "B Y", "C Z", "A Z", "C Z", "C Z", "A Z", "C Y", "C Z", "B Y", "A Z", "B X", "C Y", "C X", "C Y", "A Z", "B Z", "A Z", "A Y", "B Y", "C Z", "A Z", "C Z", "C Y", "C Z", "A Z", "B Y", "A Z", "A Z", "B Y", "C Y", "A Y", "C Y", "C Z", "C Z", "A Z", "C Z", "C Z", "A Y", "C Z", "A Z", "C Z", "C Z", "B Y", "B Y", "C Z", "B Z", "A Z", "A Z", "A Z", "C Z", "C Y", "C Z", "B Y", "C Y", "A Z", "A Z", "C Z", "B Y", "C Y", "B Y", "C Z", "A Z", "B Y", "A Z", "A Z", "A X", "C Z", "C Z", "C Y", "A Z", "C Y", "C Y", "C Z", "A Z", "A X", "C Z", "A Z", "A Z", "A Z", "C Z", "C Y", "A Z", "A X", "C Z", "C Z", "C Y", "C Y", "A Z", "C Z", "B Z", "B X", "A Z", "C Z", "B Y", "C Y", "A Z", "A Z", "C Y", "C Z", "C Y", "C Y", "B Y", "C Z", "C Z", "A Z", "B Y", "C Z", "C Z", "A Z", "A Z", "B Y", "C Z", "C Y", "A X", "A Z", "C Y", "A Z", "C Z", "C Z", "A Z", "C Y", "A Z", "C Z", "C Z", "C Z", "C Z", "A Z", "C Z", "C Y", "B Z", "C Z", "A Z", "C Z", "C Z", "B Y", "C Z", "A Z", "A Z", "A Z", "C Y", "C Z", "A Z", "A Z", "C Z", "A Z", "A Z", "C Z", "A Z", "C X", "A Z", "A Z", "C Z", "A Y", "B Z", "A Z", "C Y", "A Z", "C Y", "B Z", "C Z", "B X", "C Z", "A Z", "A Z", "C Z", "B Y", "C Z", "C Z", "B Z", "A Z", "B Y", "C Z", "C Z", "C Z", "A Z", "C Z", "B Z", "A Z", "C Z", "A Z", "B Z", "A X", "C Y", "A X", "C Z", "C Y", "C Z", "C Z", "B Y", "B Y", "C Z", "B X", "C Z", "A Z", "A Z", "B X", "A Z", "C Z", "C Z", "C Z", "B Y", "C Z", "C Y", "A Z", "B Z", "C Y", "C Z", "C Z", "A Z", "C Z", "A Y", "C Z", "C Z", "C Z", "A Z", "C Z", "C Z", "C Y", "C Z", "B Y", "B X", "A Z", "A Z", "C Z", "C Y", "C Y", "C Y", "B Y", "A X", "C Z", "B Y", "A Z", "A Z", "C Z", "B Y", "B Y", "C Z", "A Z", "C Z", "C Z", "C Z", "C Z", "B Y", "C Z", "B Y", "B Y", "A Z", "C Z", "B Y", "A Z", "A X", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "B Y", "A Z", "B Z", "A Z", "C Z", "A Z", "C Z", "A Z", "C Z", "A Z", "A Z", "C Y", "A Z", "A Z", "C Z", "C Z", "C Z", "C Z", "B Z", "C Z", "A X", "A Y", "B Y", "B Z", "A Z", "C Y", "A Z", "B X", "A Z", "C Z", "B Z", "B Y", "C Z", "C Z", "C Y", "C Z", "A Z", "A Z", "A Z", "A Z", "A Z", "A Z", "A Z", "A X", "A Z", "A Z", "C Z", "C Z", "C Z", "A Z", "B Z", "C Z", "C Z", "A X", "C Y", "A Z", "C Z", "C Y", "A Z", "A Z", "C Z", "C Z", "A Z", "C Z", "C X", "C Y", "A Z", "A Z", "C Z", "B Y", "C Z", "A Z", "A Z", "A Z", "B Z", "A Y", "B Y", "C Z", "C Z", "C Y", "C Y", "B Y", "A Z", "A Z", "B Y", "C Z", "C Z", "A Z", "A Y", "A X", "A X", "C Z", "A Z", "A X", "A Y", "A Z", "C Y", "A Z", "C Y", "A Z", "C Y", "B Z", "B Y", "A Z", "C Z", "A Z", "C Z", "C Y", "A Z", "C Z", "A Z", "B Y", "A Z", "C Z", "C Z", "C Z", "A Y", "C Z", "C Z", "C Z", "A Z", "C Y", "A Y", "C X", "C Z", "A Z", "A Z", "A Z", "A Z", "A Z", "B Y", "B Y", "C Z", "C Z", "C Y", "A Z", "C Z", "C Y", "C Z", "C Y", "A Z", "A Z", "C Z", "A Z", "C Z", "C Y", "A Z", "C Y", "A Z", "C Z", "C Y", "B Y", "C Y", "C Y", "A Z", "A Z", "C Y", "C Z", "C Y", "B Z", "A Z", "C Z", "C Z", "B Y", "C Y", "A Z", "A Z", "C Z", "A Z", "B Z", "C Z", "A Z", "C Z", "C Z", "A Z", "A Y", "B Y", "C Y", "C Z", "A Z", "C Z", "A Z", "C Z", "A Z", "C Y", "C Y", "C Z", "A Z", "A Z", "B Y", "C Z", "A Z", "C Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Y", "B Y", "C Z", "A Z", "B Z", "A Z", "A X", "C Z", "A Z", "A Z", "C Z", "B Y", "A Z", "A X", "C Y", "C Z", "C Z", "C Z", "C Z", "B Y", "C Z", "B Z", "A Z", "A Z", "A Z", "A Z", "B Z", "B X", "C Z", "A Z", "C Y", "A X", "C Z", "C Y", "C Z", "C Z", "B X", "C Z", "C Y", "A Z", "C Z", "A Z", "C Z", "B Z", "A Z", "C Z", "B Y", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "A Z", "C Z", "A Z", "A Z", "B Y", "A Z", "C Y", "B Y", "B X", "C Z", "C Y", "C Z", "C Z", "C Y", "C Y", "B Y", "C Y", "C Z", "A Z", "A Z", "A X", "C Z", "C Z", "B Y", "C Z", "C Z", "A Z", "C Z", "B X", "C Z", "C Z", "C Y", "C Z", "C Z", "C Z", "A X", "C Z", "A Z", "A Z", "C Y", "B Z", "A Y", "C Z", "C Y", "B Y", "C Z", "C Z", "C Z", "C Z", "A Z", "C Z", "C Z", "A Z", "C Z", "C Y", "C Z", "C Z", "A Y", "C Z", "C Y", "A Z", "C Z", "C Y", "C Z", "C Y", "C Y", "B X", "A Z", "C Z", "C Y", "C Y", "A Z", "A X", "C Z", "A Z", "C X", "B Y", "A X", "B Z", "C Z", "B Y", "A Z", "C Z", "A Z", "C Z", "A X", "C Z", "C Z", "C Z", "C Y", "A Z", "C Y", "C Z", "C Z", "A Z", "A Z", "A Z", "C Z", "A Z", "C Y", "C Z", "A Z", "A Z", "C Z", "A Z", "C Z", "C Z", "C Z", "C Z", "B Y", "A Z", "C Z", "A Z", "C Y", "C Z", "A Z", "C Y", "C Z", "A Z", "C Y", "C Y", "A Z", "A Z", "A Z", "C Z", "C Z", "B Y", "A X", "A X", "A Z", "C Z", "C Y", "C Y", "C Y", "C Z", "A Z", "B Y", "A Z", "A Z", "C Z", "C Y", "C Z", "C Y", "C Z", "A Z", "C Z", "C Z", "C Z", "C Y", "A Z", "C Z", "B X", "C Z", "C Z", "C Z", "C Z", "A Z", "C Z", "C Z", "C Z", "C Y", "C Z", "A Z", "C Z", "B Y", "A Z", "C Y", "A Y", "C Z", "C Z", "B Z", "C Z", "C Z", "B Y", "C Z", "A Z", "C Y", "C Z", "B Y", "C Z", "A Z", "C Z", "C Z", "C Z", "A Z", "B Y", "C Y", "A Z", "C X", "C Z", "C Y", "C Z", "A Z", "A Z", "C Y", "C Z", "A Z", "B Y", "A X", "C Y", "B Y", "A Z", "B Y", "A X", "B Z", "A Z", "A Z", "A Z", "A Z", "C Z", "C Z", "A Z", "A Z", "A X", "C Z", "A Z", "A Z", "A X", "B Y", "C Z", "C Z", "C Z", "B Z", "C Z", "A Z", "C Z", "C Z", "A Z", "A Z", "C Y", "C Z", "C Z", "A Z", "A Z", "C Y", "C Y", "C Z", "A Z", "B X", "A Z", "A Z", "C Z", "C Z", "C Z", "B Y", "A Z", "C Z", "A X", "B Z", "B Z", "C Z", "C Z", "C Y", "A X", "A Z", "B Y", "C Z", "B Y", "C Z", "B Y", "C Z", "C Y", "C Z", "A Z", "C Y", "C Y", "A Z", "C X", "B Z", "C Z", "C Z", "A Z", "C Y", "A Z", "A Z", "B Z", "A Z", "C Z", "C Z", "C Z", "C Z", "A Y", "C Y", "A Z", "C Z", "C Z", "C Y", "A Z", "B Y", "A Z", "B Z", "A Z", "A Z", "B X", "B Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "A Z", "C X", "C Z", "C X", "C Z", "B Z", "C Y", "A X", "A Z", "A Z", "C Z", "C Y", "C Z", "C Z", "A Z", "C Z", "A Z", "A Z", "A X", "C Z", "A Z", "A Z", "A Z", "A Z", "A Z", "A Z", "B Y", "A Z", "C Z", "B X", "B Z", "C Z", "A Z", "A Z", "B Z", "C Y", "A X", "C Z", "B Y", "B Y", "C Y", "A Z", "A Z", "A X", "C Z", "C Z", "A Z", "C Y", "B Y", "A Z", "B X", "A Z", "A X", "A X", "A X", "A Z", "A Z", "C Z", "A Z", "A Z", "A X", "B X", "B Z", "B X", "A Z", "B Y", "A Z", "C Z", "A Z", "A Z", "C Z", "A Y", "C Z", "B Z", "C Y", "C Y", "A Z", "C Z", "C Z", "A Z", "B Y", "C Z", "A Z", "A X", "B Z", "A Y", "B Z", "C Y", "C Y", "C Z", "A Z", "C Z", "C Z", "A Y", "C Z", "A Z", "B Y", "C Z", "B X", "A Z", "C Z", "C Y", "B Y", "A Z", "B Y", "B Z", "A Z", "A Z", "B Y", "C Z", "A Z", "C X", "C Z", "C Z", "B Z", "B Z", "C Z", "A Z", "A Z", "C Z", "A Z", "C Z", "C Z", "A Y", "C Z", "A X", "A Z", "A Z", "A Z", "A Z", "A Y", "A X", "C Z", "C Z", "C Z", "C Z", "A Z", "B Z", "C Z", "B Z", "B Y", "C Z", "C Z", "C Z", "A Z", "C Z", "B Y", "C Y", "A X", "A Z", "A X", "C Z", "B X", "C Z", "A Z", "B Y", "C X", "A Z", "C Z", "C Z", "A Z", "C Z", "A Z", "A Z", "A Z", "A Z", "A Y", "A Y", "A Z", "A Z", "A Z", "A Z", "C Z", "C Z", "C Z", "A Z", "A Z", "C Z", "A Y", "C Z", "B Z", "C X", "C Z", "C Y", "A Y", "B Y", "C Z", "C Z", "A Z", "C Z", "A X", "B Y", "C Y", "C Z", "C Z", "A Z", "A Y", "A Z", "A Z", "C Z", "A Z", "C Z", "C Z", "C X", "A Z", "C Z", "A Z", "A Z", "C Y", "B Y", "C Z", "A X", "A Z", "C Z", "A Z", "C X", "A Z", "C Z", "C Y", "A Z", "A Z", "C Z", "C Z", "C Z", "A Z", "A Z", "C Z", "A Z", "A X", "C X", "C Z", "C Z", "A Z", "A Z", "A Y", "C Z", "C Z", "B X", "C Z", "C Y", "C Z", "C Z", "A Z", "C Z", "A Z", "C Y", "C Y", "C Z", "A Z", "C Z", "B Y", "C Y", "A Z", "B Z", "A Z", "B Z", "A Z", "A Z", "C Z", "C Z", "C Z", "A Z", "C Z", "A Z", "B Z", "C Z", "C Z", "C Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "B Y", "A Z", "B Y", "C Y", "C X", "C Z", "C Z", "C Z", "C Z", "C Y", "A Z", "C Y", "A Z", "C Y", "C Z", "C Y", "C Z", "C Y", "A Z", "A Z", "C Z", "C Z", "B Z", "C Y", "C Z", "C Z", "C Z", "B Z", "B Z", "B Z", "A Z", "A Z", "A Z", "C Z", "B Z", "A Z", "A Z", "C Y", "A Y", "C Y", "C Z", "C Y", "C Z", "C Z", "C Y", "A Z", "C Z", "B Y", "C Y", "B Y", "A Z", "C Z", "A Z", "A X", "A Z", "C Z", "A Z", "A Z", "A Z", "C X", "C Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "A Z", "C Z", "C Y", "A Y", "B Y", "B X", "B Z", "C Z", "C Z", "A Z", "B Y", "C Z", "A Z", "B Z", "C Z", "A Z", "C Y", "C Y", "B Y", "C Z", "C Y", "C Z", "C Y", "A Z", "C Z", "C Z", "A Z", "A Z", "A Z", "C Z", "A Z", "A X", "A Z", "A Z", "C Z", "C Y", "C Z", "C Z", "C Z", "A Y", "B Y", "A Z", "A Z", "A Z", "A X", "B Z", "A Z", "C Y", "B Y", "A Z", "A Y", "B Z", "A Z", "B Y", "C Z", "B Y", "A Z", "B Y", "C Z", "C Z", "A Z", "A Z", "A Z", "C Y", "B Y", "B X", "A Z", "C Z", "A X", "B Z", "A X", "A Y", "C Z", "B X", "B Y", "A Z", "A Z", "B X", "C Z", "C Y", "C Y", "C Y", "C X", "C Z", "C Z", "C Z", "A Z", "B Y", "C Z", "A Z", "A Z", "A Z", "A Z", "C Y", "C Z", "C Z", "A Z", "C Z", "B Z", "B Y", "A Z", "A Z", "C Z", "A X", "A Y", "B Y", "A Z", "A Z", "B Z", "A Z", "C Z", "A Y", "A Z", "C Z", "C Z", "A Z", "A Z", "C Z", "B Y", "A Z", "A X", "C Y", "A Z", "C Z", "C Z", "C Z", "C Z", "A Z", "C Y", "C Z", "A Z", "A Z", "C Y", "A X", "C Z", "B Y", "A Z", "B Z", "C Z", "B Z", "A Z", "C Y", "C Z", "B Y", "C Y", "C Z", "A Z", "C Z", "C Z", "A Y", "A Z", "B Z", "A X", "C Y", "A Z", "A Z", "C Z", "B Y", "C Z", "A Z", "C Z", "A Z", "B Y", "A Z", "C Z", "A Z", "B Y", "A Z", "C Z", "C Z", "C Z", "A Z", "A Z", "C Z", "A Z", "A Z", "C Y", "A Y", "B Y", "B Z", "C Z", "C Y", "A Z", "C Y", "C Z", "B Y", "C Y", "C Z", "B Z", "C Z", "C Y", "C Z", "C Y", "C Z", "C Y", "B X", "C Z", "C Y", "A Z", "A X", "A Z", "C Z", "A Z", "B Y", "C Z", "A Z", "A Z", "B Y", "C Y", "A Z", "A Z", "C Z", "C Z", "C Y", "A Z", "C Y", "B Y", "A Y", "C Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Z", "A Z", "A Z", "C Y", "A Z", "C Z", "C Z", "C Z", "C Z", "A Z", "A Y", "C Y", "A Z", "C Y", "A Z", "A Z", "A Z", "C Z", "A Z", "C Z", "A Z", "C Z", "C Z", "A Z", "C Z", "C Z", "C Y", "B Z", "C Z", "C Y", "A Z", "B X", "C Y", "C Y", "C Z", "A Z", "B Y", "A Z", "A X", "B Y", "A Z", "A Z", "B Y", "B Z", "A Z", "A Z", "C Z", "A X", "C Z", "C Z", "B Z", "C Z", "C Y", "B Y", "A Z", "B Z", "C Z", "C Z", "C Z", "A Y", "A X", "C Y", "A Z", "B Z", "A Z", "B Z", "C Z", "A Y", "C Z", "C Y", "A Z", "C Y", "C Z", "C Y", "B Y", "B Y", "C Z", "A X", "C Z", "A Z", "A Z", "C Y", "C Y", "C Z", "A Z", "B Z", "C Z", "C Z", "C Z", "A Y", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "B Y", "C Z", "C Z", "A Z", "B Y", "A Z", "C Z", "C Z", "C Z", "B Z", "A Z", "C Y", "A Z", "C Z", "B Z", "C Z", "B Y", "C Y", "A X", "C Z", "A Z", "C Y", "C Z", "C Z", "C Y", "A Z", "C Z", "B Z", "A Z", "C Z", "A Z", "A X", "C Z", "A Z", "C Z", "B X", "C Z", "C Z", "C Z", "C Z", "A Z", "A X", "C Z", "C Z", "A Z", "C Z", "A Z", "C Z", "B Y", "A Z", "C Z", "A Z", "C Y", "C Z", "C Z", "A Z", "C Z", "A Z", "A Z", "A Z", "B Z", "C Y", "B X", "C Y", "C Z", "C Z", "A X", "A Z", "C Z", "B Y", "C Z", "C Y", "C Z", "A Z", "C Z", "B Y", "C Z", "C Y", "B Z", "A Z", "C Z", "B Z", "A Z", "B Z", "A Z", "C Z", "C Z", "B Y", "C Y", "C Y", "A Z", "C Z", "A Z", "A Y", "B Y", "C X", "A X", "C Z", "C Y", "B Y", "C Z", "A Z", "A Z", "C Y", "C Z", "C Z", "A Z", "B Y", "B Z", "A Z", "A Z", "A Z", "B Z", "C Z", "C Z", "C Y", "A X", "C Z", "A Z", "C Z", "B Z", "B Y", "C X", "C Z", "A X", "A X", "C Y", "B Y", "C Z", "C Z", "A Z", "A Z", "A Z", "A Z", "C Y", "C Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "A Y", "A Z", "C Y", "C Z", "B Y", "A Z", "C Y", "A Z", "A Z", "B Z", "C X", "B Y", "C Z", "A Z", "C Y", "C Z", "B Y", "A Z", "C Y", "C Z", "B Y", "C Y", "C Z", "A Z", "A X", "C Z", "C Y", "B Z", "A Z", "A Z", "B Y", "C Z", "A Z", "C Z", "C Z", "B Y", "A Z", "C Z", "C Z", "B Y", "B Y", "A Z", "C Z", "C Z", "C Z", "C Z", "A Z", "C Z", "B Z", "B Y", "C Z", "B Y", "A Z", "A Z", "C Y", "A Z", "A X", "B Z", "C Y", "C Z", "C Z", "C Z", "C Y", "C Z", "C Z", "C Y", "A X", "B X", "B X", "C Z", "C Y", "A Z", "B Y", "C Y", "C Z", "C Z", "A Z", "C Y", "A Z", "B Z", "C Z", "C Y", "C Y", "C Z", "A Z", "C Z", "A Z", "B Z", "B Z", "C Y", "A Z", "C Z", "A Z", "A Z", "C Z", "C Z", "C Z", "C Z", "C Z", "C Z", "A Z", "A Z", "A Z", "B Y", "B Z", "B Y", "C Y", "A Z", "C Z", "C Y", "A Z", "C Z", "A Z", "A X", "B Z", "A Z", "C Z", "C Z", "C Z", "A Z", "C Y", "B Y", "C Y", "A Z", "C Y", "B Z", "B Y", "B Y", "C Z", "C Z", "A Z"];
 
-console.log(game(hands));
-```
-
-### Part 2 (Refactor, for godness sake)
-
-```js
-const MoveType = {
-	ROCK: 'Rock',
-  PAPER: 'Paper',
-  SCISSORS: 'Scissors'
-}
-
-const outcomes = {
-	WIN: 6,
-  DRAW: 3,
-  LOSE: 0
-};
-
-const moves = {
-	A: { name: MoveType.ROCK, value: 1 },
-  B: { name: MoveType.PAPER, value: 2 },
-  C: { name: MoveType.SCISSORS, value: 3 },
-  X: { name: outcomes.LOSE },
-  Y: { name: outcomes.DRAW },
-  Z: { name: outcomes.WIN }
-};
-
-const values = {
-	'Rock': 1,
-  'Paper': 2,
-  'Scissors': 3
-}
-
-function decideHand(outcome, elfsHandName) {
-	let myHandsName = elfsHandName;
-  
-  if(outcome === outcomes.WIN) {
-  	if (elfsHandName === MoveType.SCISSORS) {
-    	myHandsName = MoveType.ROCK;
-    } else if (elfsHandName === MoveType.PAPER) {
-    	myHandsName = MoveType.SCISSORS;
-    } else if (elfsHandName === MoveType.ROCK) {
-    	myHandsName = MoveType.PAPER;
-    }
-  } else if (outcome === outcomes.LOSE) {
-  	if (elfsHandName === MoveType.ROCK) {
-    	myHandsName = MoveType.SCISSORS;
-    } else if (elfsHandName === MoveType.SCISSORS) {
-    	myHandsName = MoveType.PAPER;
-    } else if (elfsHandName === MoveType.PAPER) {
-    	myHandsName = MoveType.ROCK;
-    }
-  }
-  
-  return myHandsName;
-}
-
-function handResult(elfsHand, myHand) {
-	const elfsHandValue = moves[elfsHand].value;
-  const elfsHandName = moves[elfsHand].name;
-  const outcome = moves[myHand].name;
-  
-  const myHandsName = decideHand(outcome, elfsHandName);
-  
-  return outcome + values[myHandsName];
-}
-
-function game(hands) {
-	return hands.reduce((acc, currentHand) => {
-  	const currentHandArray = currentHand.split(' ');
-    const elfsHand = currentHandArray[0];
-    const myHand = currentHandArray[1];
-    
-    return acc + handResult(elfsHand, myHand);
-  }, 0);
-}
-
-const hands = ["A Y", "B X", "C Z"];
-
-console.log(game(hands));
+console.log('sample part 1', paperRockScissorsGame(sample)); // 15
+console.log('input part 1', paperRockScissorsGame(input)); // 11475
+console.log('sample part 2', paperRockScissorsGame(sample, false)); // 12
+console.log('input part 2', paperRockScissorsGame(input, false)); // 16862
 ```
