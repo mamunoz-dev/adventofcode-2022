@@ -7,8 +7,8 @@ Please, feel free to open a Pull Request if you think that any of these solution
 | Day | Challenge | Comments | Link | Codepen |
   :-:|---|:-:|:-:|:-:|
 | 1 | [Challenge #1: Calorie Counting](day1.md) | | [Link](https://adventofcode.com/2022/day/1) | [Codepen](https://codepen.io/mamunoz-dev/pen/zYLzpOL)
-| 2 | [Challenge #2: Rock Paper Scissors](day2.md) | | [Link](https://adventofcode.com/2022/day/2) | [Codepen](https://codepen.io/mamunoz-dev/pen/wvxqxgZ?editors=0011) |
-| 3 | [Challenge #3: Rucksack Reorganization](day3.md) | | [Link](https://adventofcode.com/2022/day/3) | |
+| 2 | [Challenge #2: Rock Paper Scissors](day2.md) | | [Link](https://adventofcode.com/2022/day/2) | [Codepen](https://codepen.io/mamunoz-dev/pen/wvxqxgZ) |
+| 3 | [Challenge #3: Rucksack Reorganization](day3.md) | | [Link](https://adventofcode.com/2022/day/3) | [Codepen](https://codepen.io/mamunoz-dev/pen/GRBvzqm) |
 | 4 | [Challenge #4: Camp Cleanup](day4.md) | | [Link](https://adventofcode.com/2022/day/4) | | |
 | 5 | [Challenge #5: Supply Stacks](day5.md) | | [Link](https://adventofcode.com/2022/day/5) | | |
 | 6 | [Challenge #6: Tuning Trouble](day6.md) | | [Link](https://adventofcode.com/2022/day/6) | | |
