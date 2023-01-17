@@ -14,7 +14,7 @@ Please, feel free to open a Pull Request if you think that any of these solution
 | 6 | [Challenge #6: Tuning Trouble](day6.md) | | [Link](https://adventofcode.com/2022/day/6) | [Codepen](https://codepen.io/mamunoz-dev/pen/oNMeVVP?editors=0012) |
 | 7 | [Challenge #7: No Space Left On Device](day7.md) | | [Link](https://adventofcode.com/2022/day/7) | [Codepen](https://codepen.io/mamunoz-dev/pen/dyjVOqO?editors=0012)|
 | 8 | [Challenge #8: Treetop Tree House](day8.md) | | [Link](https://adventofcode.com/2022/day/8) | [Codepen](https://codepen.io/mamunoz-dev/pen/xxJXgOg?editors=0012) |
-| 9 | [Challenge #9: Rope Bridge](day9.md) | | [Link](https://adventofcode.com/2022/day/9) | |
+| 9 | [Challenge #9: Rope Bridge](day9.md) | | [Link](https://adventofcode.com/2022/day/9) | [Codepen](https://codepen.io/mamunoz-dev/pen/BaPwWYK?editors=0012) |
 | 10 | [Challenge #10: Cathode-Ray Tube](day10.md) | | [Link](https://adventofcode.com/2022/day/10) | |
 | 11 | [Challenge #11: Monkey in the Middle](day11.md) | | [Link](https://adventofcode.com/2022/day/11) | |
 | 12 | [Challenge #12: Hill Climbing Algorithm](day12.md) | Breadth First Search (BFS) | [Link](https://adventofcode.com/2022/day/12) | |
