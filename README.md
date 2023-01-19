@@ -21,7 +21,7 @@ Please, feel free to open a Pull Request if you think that any of these solution
 | 13 | [Challenge #13: Distress Signal](day13.md) | Recursion + Sorting | [Link](https://adventofcode.com/2022/day/13) | [Codepen](https://codepen.io/mamunoz-dev/pen/qByVpeg?editors=0012) |
 | 14 | [Challenge #14: Regolith Reservoir](day14.md) | | [Link](https://adventofcode.com/2022/day/14) | [Codepen](https://codepen.io/mamunoz-dev/pen/abjVqdP?editors=0012) |
 | 15 | [Challenge #15: Beacon Exclusion Zone](day15.md) | | [Link](https://adventofcode.com/2022/day/15) | [Codepen](https://codepen.io/mamunoz-dev/pen/GRBOQxN?editors=0012) |
-| 16 | [Challenge #16: Proboscidea Volcanium](day16.md) | | [Link](https://adventofcode.com/2022/day/16) | |
+| 16 | [Challenge #16: Proboscidea Volcanium](day16.md) | | [Link](https://adventofcode.com/2022/day/16) | [Codepen](https://codepen.io/mamunoz-dev/pen/mdjqGZd?editors=0012) |
 | 17 | [Challenge #17: Pyroclastic Flow](day17.md) | | [Link](https://adventofcode.com/2022/day/17) | |
 | 18 | [Challenge #18: Boiling Boulders](day18.md) | | [Link](https://adventofcode.com/2022/day/18) | |
 | 19 | [Challenge #19: Not Enough Minerals](day19.md) | | [Link](https://adventofcode.com/2022/day/19) | |
