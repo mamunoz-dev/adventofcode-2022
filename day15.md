@@ -2,6 +2,7 @@
 
 Codepen: https://codepen.io/mamunoz-dev/pen/GRBOQxN?editors=0012
 
+Added progress log because the execution takes a while:
 ```js
 function showProgress(y, limit) {
   if (limit % y === 0) {
