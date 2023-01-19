@@ -23,11 +23,11 @@ Please, feel free to open a Pull Request if you think that any of these solution
 | 15 | [Challenge #15: Beacon Exclusion Zone](day15.md) | | [Link](https://adventofcode.com/2022/day/15) | [Codepen](https://codepen.io/mamunoz-dev/pen/GRBOQxN?editors=0012) |
 | 16 | [Challenge #16: Proboscidea Volcanium](day16.md) | Floyd Warshall + Depth First Search (DFS) + Bitmask | [Link](https://adventofcode.com/2022/day/16) | [Codepen](https://codepen.io/mamunoz-dev/pen/mdjqGZd?editors=0012) |
 | 17 | [Challenge #17: Pyroclastic Flow](day17.md) | | [Link](https://adventofcode.com/2022/day/17) | [Codepen](https://codepen.io/mamunoz-dev/pen/JjBOmjw?editors=0012) |
-| 18 | [Challenge #18: Boiling Boulders](day18.md) | | [Link](https://adventofcode.com/2022/day/18) | |
-| 19 | [Challenge #19: Not Enough Minerals](day19.md) | | [Link](https://adventofcode.com/2022/day/19) | |
-| 20 | [Challenge #20: Grove Positioning System](day20.md) | | [Link](https://adventofcode.com/2022/day/20) | |
-| 21 | [Challenge #21: Monkey Math](day21.md) | | [Link](https://adventofcode.com/2022/day/21) | |
-| 22 | [Challenge #22: Monkey Map](day22.md) | | [Link](https://adventofcode.com/2022/day/22) | |
-| 23 | [Challenge #23: Unstable Diffusion](day23.md) | | [Link](https://adventofcode.com/2022/day/23) | |
-| 24 | [Challenge #24: Blizzard Basin](day24.md) | | [Link](https://adventofcode.com/2022/day/24) | |
-| 25 | [Challenge #25: Full of Hot Air](day25.md) | | [Link](https://adventofcode.com/2022/day/25) | |
+| 18 | [Challenge #18: Boiling Boulders](day18.md) | Cache | [Link](https://adventofcode.com/2022/day/18) | [Codepen](https://codepen.io/mamunoz-dev/pen/yLqPROp?editors=0012) |
+| 19 | [Challenge #19: Not Enough Minerals](day19.md) | | [Link](https://adventofcode.com/2022/day/19) | PENDING |
+| 20 | [Challenge #20: Grove Positioning System](day20.md) | | [Link](https://adventofcode.com/2022/day/20) | PENDING |
+| 21 | [Challenge #21: Monkey Math](day21.md) | | [Link](https://adventofcode.com/2022/day/21) | PENDING |
+| 22 | [Challenge #22: Monkey Map](day22.md) | | [Link](https://adventofcode.com/2022/day/22) | PENDING |
+| 23 | [Challenge #23: Unstable Diffusion](day23.md) | | [Link](https://adventofcode.com/2022/day/23) | PENDING |
+| 24 | [Challenge #24: Blizzard Basin](day24.md) | | [Link](https://adventofcode.com/2022/day/24) | PENDING |
+| 25 | [Challenge #25: Full of Hot Air](day25.md) | | [Link](https://adventofcode.com/2022/day/25) | PENDING |
