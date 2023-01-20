@@ -14,12 +14,45 @@ function parseValvesData(input) {
 function prepareData(input) {
   const valvesAndFlowRates = parseValvesData(input)
   const valves = Object.keys(valvesAndFlowRates);
-  const valvesHavingPositiveRate = valves.filter(valve => Boolean(valvesAndFlowRates[valve].rate));
+  const valvesHavingPositiveRate = valves.filter(valve => Boolean(valvesAndFlowRates[valve].rate)); // We're not interested in valves with flow rate 0
   const valveBitRepr =
     valvesHavingPositiveRate.reduce((acc, valve, i) => Object.assign(acc, { [valve]: 1 << i }), {});
+
+  /*
+  valvesAndFlowRates = {
+    AA: { rate: 0, to: [ 'DD', 'II', 'BB' ] },
+    BB: { rate: 13, to: [ 'CC', 'AA' ] },
+    CC: { rate: 2, to: [ 'DD', 'BB' ] },
+    DD: { rate: 20, to: [ 'CC', 'AA', 'EE' ] },
+    EE: { rate: 3, to: [ 'FF', 'DD' ] },
+    FF: { rate: 0, to: [ 'EE', 'GG' ] },
+    GG: { rate: 0, to: [ 'FF', 'HH' ] },
+    HH: { rate: 22, to: [ 'GG' ] },
+    II: { rate: 0, to: [ 'AA', 'JJ' ] },
+    JJ: { rate: 21, to: [ 'II' ] }
+  }
+  */
+  // valves = [ 'AA', 'BB', 'CC', 'DD', 'EE', 'FF', 'GG', 'HH', 'II', 'JJ' ]
+  // valvesHavingPositiveRate = [ 'BB', 'CC', 'DD', 'EE', 'HH', 'JJ' ]
+  // valveBitRepr = { BB: 1 (000001), CC: 2 (000010), DD: 4 (000100), EE: 8 (001000), HH: 16 (010000), JJ: 32 (100000)}
+
   const shortestPathMatrix = getFloydWarshallShortestPathMatrix(valves, valvesAndFlowRates);
 
-  return [ valvesAndFlowRates, valvesHavingPositiveRate, valveBitRepr, shortestPathMatrix ];
+  /*
+  shortestPathMatrix = {
+    AA: { AA: 2, BB: 1, CC: 2, DD: 1, EE: 2, FF: 3, GG: 4, HH: 5, II: 1, JJ: 2 },
+    BB: { AA: 1, BB: 2, CC: 1, DD: 2, EE: 3, FF: 4, GG: 5, HH: 6, II: 2, JJ: 3 },
+    CC: { AA: 2, BB: 1, CC: 2, DD: 1, EE: 2, FF: 3, GG: 4, HH: 5, II: 3, JJ: 4 },
+    DD: { AA: 1, BB: 2, CC: 1, DD: 2, EE: 1, FF: 2, GG: 3, HH: 4, II: 2, JJ: 3 },
+    EE: { AA: 2, BB: 3, CC: 2, DD: 1, EE: 2, FF: 1, GG: 2, HH: 3, II: 3, JJ: 4 },
+    FF: { AA: 3, BB: 4, CC: 3, DD: 2, EE: 1, FF: 2, GG: 1, HH: 2, II: 4, JJ: 5 },
+    GG: { AA: 4, BB: 5, CC: 4, DD: 3, EE: 2, FF: 1, GG: 2, HH: 1, II: 5, JJ: 6 },
+    HH: { AA: 5, BB: 6, CC: 5, DD: 4, EE: 3, FF: 2, GG: 1, HH: 2, II: 6, JJ: 7 },
+    II: { AA: 1, BB: 2, CC: 3, DD: 2, EE: 3, FF: 4, GG: 5, HH: 6, II: 2, JJ: 1 },
+    JJ: { AA: 2, BB: 3, CC: 4, DD: 3, EE: 4, FF: 5, GG: 6, HH: 7, II: 1, JJ: 2 }
+  }
+  */
+  return { valvesAndFlowRates, valvesHavingPositiveRate, valveBitRepr, shortestPathMatrix };
 }
 
 const isVisited = (bitReprA, bitReprB) => bitReprA & bitReprB;
@@ -54,55 +87,60 @@ function getFloydWarshallShortestPathMatrix(valves, valvesAndFlowRates) {
   return shortestPathMatrix;
 }
 
-function depthFirstSearch({ minutesLeft, currentValve, openedBitRepr, rate, bitReprMaxRateMap, valvesHavingPositiveRate, shortestPathMatrix, valveBitRepr, valvesAndFlowRates}) {
-  bitReprMaxRateMap[openedBitRepr] = Math.max(bitReprMaxRateMap[openedBitRepr] || 0, rate);
+function depthFirstSearch({ currentMinutesLeft, currentValve, currentRate, openedValvesBitRepr, maxRateMapBitRepr, originalData}) {
 
-  for (const valve of valvesHavingPositiveRate) {
-    const newMinutesLeft = minutesLeft - (shortestPathMatrix[currentValve][valve] + 1);
-    const newRate = rate + newMinutesLeft * valvesAndFlowRates[valve].rate;
-    const newOpenedBitRepr = openedBitRepr | valveBitRepr[valve];
+  // bitReprMaxRateMap = {}
 
-    if (newMinutesLeft <= 0 || isVisited(valveBitRepr[valve], openedBitRepr))
-      continue;
+  // If for the current valves opened, current rate is higher, update it
+  maxRateMapBitRepr[openedValvesBitRepr] = Math.max(maxRateMapBitRepr[openedValvesBitRepr] || 0, currentRate);
 
-    depthFirstSearch({
-      minutesLeft: newMinutesLeft,
-      currentValve: valve,
-      openedBitRepr: newOpenedBitRepr,
-      rate: newRate,
-      bitReprMaxRateMap,
-      valvesHavingPositiveRate,
-      shortestPathMatrix,
-      valveBitRepr,
-      valvesAndFlowRates
-    });
+  // maxRateMapBitRepr = { '0': 0 }
+
+  for (const nextValve of originalData.valvesHavingPositiveRate) {
+    const updatedMinutesLeft = currentMinutesLeft - (originalData.shortestPathMatrix[currentValve][nextValve] + 1);
+    const updatedRate = currentRate + updatedMinutesLeft * originalData.valvesAndFlowRates[nextValve].rate;
+    const updatedOpenedValvesBitRepr = openedValvesBitRepr | originalData.valveBitRepr[nextValve];
+
+      // currentMinutesLeft = 30, currentValve = AA, valve = BB, shortestPathMatrix[AA][BB] = 1
+      // valvesAndFlowRates[BB] = { rate: 13, to: [ 'CC', 'AA' ] }, valveBitRepr[BB] = 1 (000001), openedBitRepr = 000000
+      // updatedMinutesLeft = 30 - 2 = 28;
+      // updatedRate = 0 + 28 * 13
+      // updatedOpenedValvesBitRepr = 000000 | 000001 = 000001
+
+    if (updatedMinutesLeft > 0 && !isVisited(originalData.valveBitRepr[nextValve], openedValvesBitRepr)) {
+      depthFirstSearch({
+        currentMinutesLeft: updatedMinutesLeft,
+        currentRate: updatedRate,
+        currentValve: nextValve,
+        openedValvesBitRepr: updatedOpenedValvesBitRepr,
+        maxRateMapBitRepr,
+        originalData,
+      });
+    }
   }
 
-  return bitReprMaxRateMap;
+  return maxRateMapBitRepr;
 }
 
 function getMaxPressureReleased(input, part=1) {
-  const [ valvesAndFlowRates, valvesHavingPositiveRate, valveBitRepr, shortestPathMatrix ] = prepareData(input);
-  const bitReprMaxRateMap = depthFirstSearch({
-    minutesLeft: part === 1 ? 30 : 26,
+  const originalData = prepareData(input);
+  const maxRateMapBitRepr = depthFirstSearch({
+    currentMinutesLeft: part === 1 ? 30 : 26,
     currentValve: "AA",
-    openedBitRepr: 0,
-    rate: 0,
-    bitReprMaxRateMap: {},
-    valvesHavingPositiveRate,
-    shortestPathMatrix,
-    valveBitRepr,
-    valvesAndFlowRates
+    currentRate: 0,
+    openedValvesBitRepr: 0,
+    maxRateMapBitRepr: {},
+    originalData
   });
 
   if (part === 1) {
-    return Math.max(...Object.values(bitReprMaxRateMap));
+    return Math.max(...Object.values(maxRateMapBitRepr));
   }
 
   let res = Number.NEGATIVE_INFINITY;
 
-  for (const human of Object.entries(bitReprMaxRateMap)) {
-    for (const elephant of Object.entries(bitReprMaxRateMap)) {
+  for (const human of Object.entries(maxRateMapBitRepr)) {
+    for (const elephant of Object.entries(maxRateMapBitRepr)) {
       if (!(human[0] & elephant[0])) {
         res = Math.max(res, human[1] + elephant[1])
       }
@@ -118,5 +156,5 @@ const input = ["Valve HM has flow rate=0; tunnels lead to valves LS, YS", "Valve
 console.log('sample part 1', getMaxPressureReleased(sample, 1)); // 1651
 console.log('input part 1', getMaxPressureReleased(input, 1)); // 2253
 console.log('sample part 2', getMaxPressureReleased(sample, 2)); // 1707
-console.log('input part 1', getMaxPressureReleased(input, 2)); // 2838
+console.log('input part 2', getMaxPressureReleased(input, 2)); // 2838
 ```
